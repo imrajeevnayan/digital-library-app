@@ -42,16 +42,16 @@ cd digital-library-app
 
 ### 2. Configure OAuth2 Credentials
 
-Create `.env` file in the root directory:
+Create `.env` file in the root directory and **replace the placeholders with your actual Client IDs and Secrets**:
 
 ```env
 # GitHub OAuth2
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_CLIENT_ID=your_actual_github_client_id
+GITHUB_CLIENT_SECRET=your_actual_github_client_secret
 
 # Google OAuth2
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CLIENT_ID=your_actual_google_client_id
+GOOGLE_CLIENT_SECRET=your_actual_google_client_secret
 ```
 
 #### GitHub OAuth2 Setup:

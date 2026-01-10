@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: libstack-db-backup
+    environment:
+      POSTGRES_DB: library
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "5433:5432"
+    command: |
+      bash -c "
+        until pg_isready -U admin -d library; do
+          echo 'Waiting for database...'
+          sleep 2
+        done
+        echo 'Database ready, creating backup...'
+        pg_dump -U admin -d library > /backups/backup_$(date +%Y%m%d_%H%M%S).sql
+        echo 'Backup complete!'
+        echo 'Backup files:'
+        ls -la /backups/
+        echo 'Keeping only last 7 backups...'
+        ls -t /backups/*.sql | tail -n +8 | xargs -r rm
+        echo 'Done!'
+        echo 'Shutting down...'
+        docker-compose down
+      "
+    restart: "no"
+
+volumes:
+  postgres_data:
+    external: true

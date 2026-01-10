@@ -392,7 +392,7 @@ docker-compose logs -f postgres
 ## 📦 Technology Stack
 
 ### Backend
-- Java 21
+- Java 25
 - Spring Boot 3.4
 - Spring Security with OAuth2 Client
 - PostgreSQL

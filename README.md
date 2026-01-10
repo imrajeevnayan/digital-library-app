@@ -36,8 +36,8 @@ A modern Digital Library application built with Spring Boot, React Vite, Postgre
 ### 1. Clone and Navigate
 
 ```bash
-git clone <repository-url>
-cd libstack
+git clone https://github.com/imrajeevnayan/digital-library-app.git
+cd digital-library-app
 ```
 
 ### 2. Configure OAuth2 Credentials

@@ -282,7 +282,7 @@ npm run dev
 
 Access PostgreSQL:
 ```bash
-docker exec -it libstack-db psql -U admin -d library
+docker exec -it libstack-db psql -U postgres -d library
 ```
 
 ### Backup and Restore
@@ -305,8 +305,8 @@ Restore from backup:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/library
-    username: admin
-    password: secret
+    username: postgres
+    password: 123
   security:
     oauth2:
       client:

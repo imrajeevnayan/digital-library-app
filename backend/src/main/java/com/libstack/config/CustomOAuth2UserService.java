@@ -28,32 +28,34 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerId = oauth2User.getAttribute("id");
         String email = oauth2User.getAttribute("email");
         String name = oauth2User.getAttribute("name");
-        
+
         if (email == null) {
             email = oauth2User.getAttribute("login") + "@" + provider + ".local";
         }
-        
+
         if (name == null) {
             name = oauth2User.getAttribute("login");
         }
 
+        String finalEmail = email;
+        String finalName = name;
+
         User user = userRepository.findByEmail(email)
-            .orElseGet(() -> {
-                User newUser = new User();
-                newUser.setEmail(email);
-                newUser.setName(name);
-                newUser.setProvider(provider.toUpperCase());
-                newUser.setProviderId(providerId);
-                newUser.setRole("USER");
-                return userRepository.save(newUser);
-            });
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(finalEmail);
+                    newUser.setName(finalName);
+                    newUser.setProvider(provider.toUpperCase());
+                    newUser.setProviderId(providerId);
+                    newUser.setRole("USER");
+                    return userRepository.save(newUser);
+                });
 
         user.setProviderId(providerId);
         return new CustomOAuth2User(
-            user,
-            oauth2User.getAttributes(),
-            "name",
-            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
+                user,
+                oauth2User.getAttributes(),
+                "name",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
     }
 }

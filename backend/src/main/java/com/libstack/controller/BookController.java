@@ -3,7 +3,7 @@ package com.libstack.controller;
 import com.libstack.dto.BookDTO;
 import com.libstack.dto.CreateBookRequest;
 import com.libstack.dto.UpdateBookRequest;
-import com.libstack.service.LibraryService;
+import com.libstack.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/books")
 public class BookController {
 
-    private final LibraryService libraryService;
+    private final BookService bookService;
 
-    public BookController(LibraryService libraryService) {
-        this.libraryService = libraryService;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping
@@ -29,46 +29,46 @@ public class BookController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Boolean available,
             @PageableDefault(size = 12) Pageable pageable) {
-        
+
         Page<BookDTO> books;
-        
+
         if (search != null && !search.isEmpty()) {
-            books = libraryService.searchBooks(search, pageable);
+            books = bookService.searchBooks(search, pageable);
         } else if (category != null && !category.isEmpty()) {
-            books = libraryService.getBooksByCategory(category, pageable);
+            books = bookService.getBooksByCategory(category, pageable);
         } else if (Boolean.TRUE.equals(available)) {
-            books = libraryService.getAvailableBooks(pageable);
+            books = bookService.getAvailableBooks(pageable);
         } else {
-            books = libraryService.getAllBooks(pageable);
+            books = bookService.getAllBooks(pageable);
         }
-        
+
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable String id) {
-        BookDTO book = libraryService.getBookById(id);
+        BookDTO book = bookService.getBookById(id);
         return ResponseEntity.ok(book);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody CreateBookRequest request) {
-        BookDTO book = libraryService.createBook(request);
+        BookDTO book = bookService.createBook(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(book);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> updateBook(@PathVariable String id, @RequestBody UpdateBookRequest request) {
-        BookDTO book = libraryService.updateBook(id, request);
+        BookDTO book = bookService.updateBook(id, request);
         return ResponseEntity.ok(book);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBook(@PathVariable String id) {
-        libraryService.deleteBook(id);
+        bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 }

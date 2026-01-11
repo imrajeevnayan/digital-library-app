@@ -118,7 +118,7 @@ function Home() {
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <p>&copy; 2024 LibStack Digital Library. All rights reserved.</p>
+                    <p>&copy; 2026 LibStack Digital Library. All rights reserved.</p>
                 </div>
             </footer>
         </div>

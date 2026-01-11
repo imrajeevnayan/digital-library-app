@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import Login from './pages/Login'
+import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import Books from './pages/Books'
 import MyLoans from './pages/MyLoans'
@@ -25,7 +26,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
   }
 
   if (adminOnly && user.role !== 'ADMIN') {
-    return <Navigate to="/" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return children
@@ -34,21 +35,21 @@ function ProtectedRoute({ children, adminOnly = false }) {
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route
-        path="/"
         element={
           <ProtectedRoute>
             <Layout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
-        <Route path="books" element={<Books />} />
-        <Route path="my-loans" element={<MyLoans />} />
-        <Route path="categories" element={<Categories />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/books" element={<Books />} />
+        <Route path="/my-loans" element={<MyLoans />} />
+        <Route path="/categories" element={<Categories />} />
         <Route
-          path="admin/users"
+          path="/admin/users"
           element={
             <ProtectedRoute adminOnly>
               <AdminUsers />
@@ -56,7 +57,7 @@ function App() {
           }
         />
         <Route
-          path="admin/loans"
+          path="/admin/loans"
           element={
             <ProtectedRoute adminOnly>
               <AdminLoans />

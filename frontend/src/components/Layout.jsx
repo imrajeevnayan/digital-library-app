@@ -21,7 +21,7 @@ function Layout() {
   }
 
   const navItems = [
-    { path: '/', icon: 'home', label: 'Dashboard' },
+    { path: '/dashboard', icon: 'home', label: 'Dashboard' },
     { path: '/books', icon: 'book', label: 'Books' },
     { path: '/my-loans', icon: 'loan', label: 'My Loans' },
     { path: '/categories', icon: 'category', label: 'Categories' }
@@ -84,7 +84,7 @@ function Layout() {
           </svg>
           <h1>LibStack</h1>
         </div>
-        
+
         <nav className="sidebar-nav">
           {navItems.map((item) => (
             <NavLink

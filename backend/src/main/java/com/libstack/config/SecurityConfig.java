@@ -17,6 +17,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+        @org.springframework.beans.factory.annotation.Value("${app.cors.origin}")
+        private String corsOrigin;
+
         private final CustomOAuth2UserService oauth2UserService;
         private final OAuth2AuthenticationSuccessHandler successHandler;
 
@@ -59,7 +62,7 @@ public class SecurityConfig {
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+                configuration.setAllowedOrigins(List.of(corsOrigin));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
                 configuration.setAllowCredentials(true);

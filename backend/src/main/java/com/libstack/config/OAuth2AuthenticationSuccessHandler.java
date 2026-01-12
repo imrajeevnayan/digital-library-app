@@ -26,18 +26,26 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
-        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        try {
+            System.out.println("OAuth2 Login Successful. Principal: " + authentication.getPrincipal());
 
-        String role = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("ROLE_USER")
-                .replace("ROLE_", "");
+            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        // We can just redirect to the frontend URL
-        // The session cookie (JSESSIONID) will be set by the response
-        String targetUrl = frontendUrl + "/?auth=success&role=" + role;
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+            String role = authorities.stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse("ROLE_USER")
+                    .replace("ROLE_", "");
+
+            // We can just redirect to the frontend URL
+            // The session cookie (JSESSIONID) will be set by the response
+            String targetUrl = frontendUrl + "/?auth=success&role=" + role;
+            System.out.println("Redirecting to: " + targetUrl);
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

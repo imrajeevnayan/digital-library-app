@@ -1,5 +1,6 @@
 server:
   port: 8080
+  forward-headers-strategy: native
 
 spring:
   datasource:
@@ -38,8 +39,6 @@ app:
     authenticated-urls:
       - /api/v1/**
 
-server:
-  forward-headers-strategy: native
 
 logging:
   level:

@@ -38,6 +38,16 @@ app:
     authenticated-urls:
       - /api/v1/**
 
+server:
+  forward-headers-strategy: native
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
 springdoc:
   api-docs:
     path: /api-docs

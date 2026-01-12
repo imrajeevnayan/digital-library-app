@@ -50,7 +50,13 @@ public class SecurityConfig {
                                 .oauth2Login(oauth2 -> oauth2
                                                 .userInfoEndpoint(userInfo -> userInfo
                                                                 .userService(oauth2UserService))
-                                                .successHandler(successHandler))
+                                                .successHandler(successHandler)
+                                                .failureHandler((request, response, exception) -> {
+                                                        System.out.println("OAuth2 Login Failed!!");
+                                                        exception.printStackTrace();
+                                                        response.sendRedirect("/?auth=failed&message="
+                                                                        + exception.getMessage());
+                                                }))
                                 .logout(logout -> logout
                                                 .logoutSuccessUrl("/")
                                                 .invalidateHttpSession(true)

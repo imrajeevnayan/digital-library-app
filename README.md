@@ -445,3 +445,23 @@ Use GitHub Issues to report bugs or request features:
 ## 🔒 Security
 
 See [SECURITY.md](SECURITY.md) for our security policy and reporting guidelines.
+
+## ❓ Troubleshooting
+
+### OAuth2 Login Errors
+
+#### "The redirect_uri is not associated with this application"
+This error from GitHub (or Google) means the **Authorization callback URL** in your OAuth App settings does not match what the application is sending.
+
+1. Go to your GitHub OAuth App settings.
+2. Verify the **Authorization callback URL** is exactly:
+   - Development: `http://localhost:8080/login/oauth2/code/github`
+   - Production: `http://<your-domain-or-ip>/login/oauth2/code/github`
+
+**Note:** A trailing slash or http vs https difference will cause this error.
+
+#### "401 Unauthorized" after login
+If you are redirected back but not logged in:
+1. Check that cookies are enabled in your browser.
+2. Ensure you are accessing the frontend via `http://localhost:5173` and not directly the backend.
+

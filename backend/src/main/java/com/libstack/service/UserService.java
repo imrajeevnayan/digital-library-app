@@ -57,6 +57,33 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    public UserDTO registerUser(com.libstack.dto.RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already in use");
+        }
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(request.getPassword()));
+        user.setRole("USER");
+        user.setProvider("LOCAL");
+        return toUserDTO(userRepository.save(user));
+    }
+    
+    public UserDTO loginUser(com.libstack.dto.LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+            
+        if (user.getProvider() != null && !user.getProvider().equals("LOCAL")) {
+             throw new RuntimeException("Please login with " + user.getProvider());
+        }
+            
+        if (!new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        return toUserDTO(user);
+    }
+
     private UserDTO toUserDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());

@@ -20,15 +20,6 @@ public class SecurityConfig {
         @org.springframework.beans.factory.annotation.Value("${app.cors.origin}")
         private String corsOrigin;
 
-        private final CustomOAuth2UserService oauth2UserService;
-        private final OAuth2AuthenticationSuccessHandler successHandler;
-
-        public SecurityConfig(CustomOAuth2UserService oauth2UserService,
-                        OAuth2AuthenticationSuccessHandler successHandler) {
-                this.oauth2UserService = oauth2UserService;
-                this.successHandler = successHandler;
-        }
-
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
@@ -37,9 +28,10 @@ public class SecurityConfig {
                                 // Session management defaults to IF_REQUIRED which is correct for session-based
                                 // auth
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/", "/login", "/error", "/api-docs/**",
+                                                .requestMatchers("/", "/login", "/register", "/error", "/api-docs/**",
                                                                 "/swagger-ui/**")
                                                 .permitAll()
+                                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register").permitAll()
                                                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                                                                 "/api/v1/books/**",
                                                                 "/api/v1/categories/**")
@@ -47,22 +39,19 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                                                 .requestMatchers("/api/v1/**").authenticated()
                                                 .anyRequest().permitAll())
-                                .oauth2Login(oauth2 -> oauth2
-                                                .userInfoEndpoint(userInfo -> userInfo
-                                                                .userService(oauth2UserService))
-                                                .successHandler(successHandler)
-                                                .failureHandler((request, response, exception) -> {
-                                                        System.out.println("OAuth2 Login Failed!!");
-                                                        exception.printStackTrace();
-                                                        response.sendRedirect("/?auth=failed&message="
-                                                                        + exception.getMessage());
-                                                }))
+                                // Use Basic Auth (optional, for Postman testing) or Form Login
+                                .httpBasic(basic -> {})
                                 .logout(logout -> logout
                                                 .logoutSuccessUrl("/")
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID"));
 
                 return http.build();
+        }
+
+        @Bean
+        public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+                return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         }
 
         @Bean

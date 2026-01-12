@@ -19,31 +19,31 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> register(@RequestBody @jakarta.validation.Valid com.libstack.dto.RegisterRequest request) {
+        return ResponseEntity.ok(userService.registerUser(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody @jakarta.validation.Valid com.libstack.dto.LoginRequest request) {
+        // In a real app, you would issue a JWT here. 
+        // For now, we return UserDTO. Since basic auth is requested, we might need Basic Auth header support or just custom login.
+        // Given the prompt "add basic register and login", I will implement a custom endpoint that verifies password.
+        return ResponseEntity.ok(userService.loginUser(request));
+    }
+
     @GetMapping("/user")
     public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).build();
         }
 
-        String email = null;
-        if (authentication instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
-            Object principal = oauth2Token.getPrincipal();
-            if (principal instanceof CustomOAuth2User) {
-                email = ((CustomOAuth2User) principal).getUser().getEmail();
-            } else {
-                // Fallback to attribute if not our custom user (shouldn't happen but good for
-                // safety)
-                email = ((org.springframework.security.oauth2.core.user.OAuth2User) principal).getAttribute("email");
-            }
-        } else {
-            email = authentication.getName();
+        String email = authentication.getName();
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+             // Keep this just in case they revert, but strictly speaking we are removing oauth support
+             email = ((org.springframework.security.oauth2.core.user.OAuth2User) authentication.getPrincipal()).getAttribute("email");
         }
-
-        if (email == null) {
-            return ResponseEntity.status(401).build();
-        }
-
+        
         UserDTO user = userService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }

@@ -22,8 +22,16 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const loginWithOAuth = (provider) => {
-    window.location.href = `/oauth2/authorization/${provider}`
+  const login = async (email, password) => {
+    const response = await api.post('/api/v1/auth/login', { email, password })
+    setUser(response.data)
+    return response.data
+  }
+
+  const register = async (name, email, password) => {
+    const response = await api.post('/api/v1/auth/register', { name, email, password })
+    setUser(response.data)
+    return response.data
   }
 
   const logout = async () => {
@@ -40,7 +48,8 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     loading,
-    loginWithOAuth,
+    login,
+    register,
     logout,
     checkAuth
   }

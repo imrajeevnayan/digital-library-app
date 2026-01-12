@@ -34,11 +34,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
+        // Log the full stack trace
+        ex.printStackTrace();
+
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now());
         response.put("status", 500);
         response.put("error", "Internal Server Error");
-        response.put("message", "An unexpected error occurred");
+        // Include actual message for debugging purposes
+        response.put("message", ex.getMessage());
         return ResponseEntity.internalServerError().body(response);
     }
 }

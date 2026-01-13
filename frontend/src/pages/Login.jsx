@@ -64,9 +64,10 @@ function Login() {
           <form onSubmit={handleSubmit} className="login-form">
             {!isLogin && (
               <div className="form-group">
-                <label>Full Name</label>
+                <label className="form-label">Full Name</label>
                 <input
                   type="text"
+                  className="form-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
@@ -76,9 +77,10 @@ function Login() {
             )}
 
             <div className="form-group">
-              <label>Email Address</label>
+              <label className="form-label">Email Address</label>
               <input
                 type="email"
+                className="form-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
@@ -87,9 +89,10 @@ function Login() {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label className="form-label">Password</label>
               <input
                 type="password"
+                className="form-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -97,10 +100,10 @@ function Login() {
               />
             </div>
 
-            {error && <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+            {error && <div className="error-message">{error}</div>}
 
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+              {loading ? <div className="spinner-sm"></div> : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
 
             <div className="toggle-auth">
@@ -108,7 +111,6 @@ function Login() {
                 type="button"
                 className="toggle-btn"
                 onClick={() => setIsLogin(!isLogin)}
-                style={{ background: 'none', border: 'none', color: '#4f46e5', cursor: 'pointer', marginTop: '15px' }}
               >
                 {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
               </button>

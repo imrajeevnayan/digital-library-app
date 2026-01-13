@@ -1,9 +1,11 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useTheme } from '../contexts/ThemeContext'
 import { useState } from 'react'
 
 function Layout() {
   const { user, logout } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -115,6 +117,15 @@ function Layout() {
         </form>
 
         <div className="header-actions">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{ width: '36px', height: '36px', fontSize: '18px' }}
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+
           <div className="user-menu" onClick={() => setShowUserMenu(!showUserMenu)}>
             <div className="user-avatar">
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
@@ -127,11 +138,12 @@ function Layout() {
               position: 'absolute',
               top: '70px',
               right: '24px',
-              background: 'white',
+              background: 'var(--surface)',
               borderRadius: '8px',
               boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
               padding: '8px',
-              zIndex: 1000
+              zIndex: 1000,
+              border: '1px solid var(--border)'
             }}>
               <button
                 onClick={handleLogout}

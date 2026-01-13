@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useTheme } from '../contexts/ThemeContext'
 import './Home.css'
 
 function Home() {
     const { user } = useAuth()
+    const { theme, toggleTheme } = useTheme()
 
     return (
         <div className="landing-page">
@@ -20,6 +22,9 @@ function Home() {
                     <div className="nav-links">
                         <a href="#features">Features</a>
                         <a href="#about">About</a>
+                        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+                            {theme === 'light' ? '🌙' : '☀️'}
+                        </button>
                         {user ? (
                             <Link to="/dashboard" className="btn btn-primary">Go to Dashboard</Link>
                         ) : (
